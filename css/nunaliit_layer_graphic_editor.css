@@ -26,13 +26,15 @@
 	border: 1px solid black;
 	margin: 1px;
 }
-.selectedgridcell {
+.gridcell.selectedgridcell.mouseovergridcell {
+    background: black;   
+}
+.gridcell.selectedgridcell {
 	background: black;	
 }
-.mouseovergridcell {
-    background: blue;	
+.gridcell.mouseovergridcell {
+    background: lightgrey;	
 }
-
 
 #grid {
     background: white;

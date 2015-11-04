@@ -54,36 +54,50 @@ graphicEditor.generateAxisLabels = function() {
 
 
 graphicEditor.gridEventListener = function() {
-    //Handler for hovering over grid cells
+    //Handler for clicking on grid cells
     this.selectCell();
     
     //Handler for hovering over grid cells
     this.mouseoverCell();  
+    
+    //Handler for hovering off grid cells
+    this.unselectCell();
 };
 
 // Function Name: selectCell
 // Description: Performs required tasks when a cell is selected. 
 graphicEditor.selectCell = function() {
     $('.gridcell').click( function() { 
-        window.console.log("mouse click event");
-    });  
-
+        var cellID = $(this).attr('id');
+        //window.console.log("Cell ID: " + cellID + " mouse click event");
+        $(this).toggleClass('selectedgridcell');
+    });
 };
 
 // Function Name: unselectCell
 // Description: Performs required tasks when a cell is unselected
 graphicEditor.unselectCell = function() {
-      
+    $('.gridcell').mouseout( function() {    
+        var cellID = $(this).attr('id');
+        //window.console.log("Cell ID: " + cellID + " mouseout event");        
+        $(this).toggleClass('mouseovergridcell');        
+    });  
 };
 
 // Function Name: mouseoverCell
 // Description: Performs required tasks when a cell is mouseover
 graphicEditor.mouseoverCell = function() {
-    $('.gridcell').mouseover( function() { 
-        window.console.log("mouse over event");
+    $('.gridcell').mouseover( function() {    
+        var cellID = $(this).attr('id');
+        //window.console.log("Cell ID: " + cellID + " mouseover event");        
+        $(this).toggleClass('mouseovergridcell');        
     });    
 };
 
+graphicEditor.updateCellStatus = function(cellID) {
+    
+    
+};
 
 // Function name: start
 // Description: calls required functions to start graphic editor. 
