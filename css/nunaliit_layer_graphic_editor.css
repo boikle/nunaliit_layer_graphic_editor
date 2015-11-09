@@ -65,3 +65,8 @@
     float: left;
     background-color: #FFFFFF;    
 }
+
+/* Update open layers attribution position */
+.olControlAttribution {
+	bottom: 4px !important;	
+}

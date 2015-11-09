@@ -2,7 +2,11 @@ var graphicEditor = graphicEditor || {
     gridModel: [],
     numColumns: 10,
     numRows: 10,
-    userClickSummary: ""
+    userClickSummary: "", 
+    map: null,
+    mercator: null,
+    WGS84: null,
+    centerPosition: null
 };
 
 // Function Name: cell
@@ -168,6 +172,35 @@ graphicEditor.updateTextarea = function() {
     $('#clickSummary').val("[" + this.userClickSummary + "]");
 };
 
+// Function Name: initPreviewMap
+// Description: Initiates the preview map
+graphicEditor.initPreviewMap = function() {
+    this.map = new OpenLayers.Map('map');
+    this.mercator = new OpenLayers.Projection("EPSG:900913"); 
+    this.WGS84 = new OpenLayers.Projection("EPSG:4326");
+    this.centerPosition = new OpenLayers.LonLat(-75.3, 45.6);
+    
+    // define background layer
+    var osm = new OpenLayers.Layer.OSM( "Open Street Map");
+    this.map.addLayers([osm]); 
+    
+    // define center position and zoom level
+    this.map.setCenter(this.centerPosition.transform(this.WGS84, this.mercator), 7);
+};
+
+// Function Name: previewGraphic
+// Description: show preview graphic point
+graphicEditor.previewGraphic = function() {
+    var pointLayer = new OpenLayers.Layer.Vector("Point layer");
+    this.map.addLayer(pointLayer); 
+    
+    // create and add point to tempPointLayer
+    var point = new OpenLayers.Geometry.Point(-75.6, 45.3);
+    point.transform(this.WGS84, this.mercator);
+    var pointFeature = new OpenLayers.Feature.Vector(point, null);                    
+    pointLayer.addFeatures([pointFeature]);  
+};
+
 // Function name: start
 // Description: calls required functions to start graphic editor. 
 graphicEditor.start = function() {
@@ -175,10 +208,12 @@ graphicEditor.start = function() {
     this.generateGrid();
     // Add grid axis labels
     this.generateAxisLabels();
-    // Initiate erid data model
+    // Initiate grid data model
     this.initiateGridModel();
     // Grid event listener
     this.gridEventListener();
+    // Initiate OpenLayers 3 preview map
+    this.initPreviewMap();
     // Set text area
     this.updateTextarea();
 };
