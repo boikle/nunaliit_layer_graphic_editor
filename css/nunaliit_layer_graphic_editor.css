@@ -32,8 +32,10 @@ input[type=number]{
 	border: 1px solid white;
 }
 .gridcell {
-	width: 20px;
-	height: 20px;
+	width: 100%;
+	height: 100%;
+	max-width:20px;
+	max-height:20px;
 	background: white;
 	border: 1px solid black;
 	margin: 1px;
@@ -58,6 +60,10 @@ input[type=number]{
     height: 275px;
     border: 1px solid black;
     background-color: #FFFFFF;	
+}
+
+#nunaliit2_layer_graphic_editor {
+	max-width: 300px;
 }
 
 #nunaliit2_layer_graphic_editor, #nunaliit2_layer_graphic_control_panel, #nunaliit2_layer_graphic_preview {
