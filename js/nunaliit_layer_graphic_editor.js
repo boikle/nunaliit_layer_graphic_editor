@@ -1,3 +1,8 @@
+/*
+Copyright (c) 2015, Robert Oikle
+All rights reserved.
+*/
+
 var graphicEditor = graphicEditor || {
     gridModel: [],
     numColumns: 11,
@@ -14,21 +19,20 @@ var graphicEditor = graphicEditor || {
     pointFeature: null
 };
 
-
 // Constructors //////////////////////////////////////////////////////////////////////////
-
-// Function Name: cell
-// Description: constructor for creating cell objects
+/**
+ * Constructor for creating cell objects
+ * @param {string} id the css id of grid cell
+ */ 
 function cell(id) {
     this.clickState = false;
     this.cellID = id;
 };
-// ///////////////////////////////////////////////////////////////////////////////////////
 
-// Grid editor functions
-
-// Function Name: generateGrid
-// Description: Produces a 11x11 grid consisting of 20x20 px div cells
+// Grid editor functions /////////////////////////////////////////////////////////////////
+/**
+ * Produces a 11x11 grid consisting of 20x20 px div cells
+ */ 
 graphicEditor.generateGrid = function() {
     var numColumns = this.numColumns;
     var numRows = this.numRows;
@@ -40,8 +44,10 @@ graphicEditor.generateGrid = function() {
     };
 };
 
-// Function Name: generateAxisLabels
-// Description: Creates x and y axis grid labels Note: axis origin is top right corner
+/**
+ * Creates the x and y axis grid labels
+ * Note: axis origin is top right corner
+ */
 graphicEditor.generateAxisLabels = function() {
     // Generate x and y axis labels
     $('#grid').append('<div class="col" id="yaxis"></div');
@@ -51,8 +57,9 @@ graphicEditor.generateAxisLabels = function() {
     };
 };
 
-//Function Name: updateGridView
-//Description: updates the class of each div cell based on the state in the grid data model
+/**
+ * Updates the class of each div cell based on the state in the grid data model
+ */
 graphicEditor.updateGridView = function() {
     for (var cell in this.gridModel) {
          if (this.gridModel[cell].clickState === true)    {      
@@ -62,13 +69,11 @@ graphicEditor.updateGridView = function() {
          };
      };
 };
-// ///////////////////////////////////////////////////////////////////////////////////////
 
-
-// Grid Model functions
-
-// Function Name: initiateGridModel
-// Description: Initiate grid model with unselected cell values
+// Grid Model functions //////////////////////////////////////////////////////////////////
+/**
+ * Initiate grid model with unselected cell values
+ */
 graphicEditor.initiateGridModel = function() {
     var gridModel = this.gridModel;
     var numColumns = this.numColumns;
@@ -81,8 +86,9 @@ graphicEditor.initiateGridModel = function() {
     };
 };
 
-// Function Name: resetGridModel
-// Description: Reset the grid model to the initial values. 
+/**
+ * Reset the grid model to the initial values. 
+ */
 graphicEditor.resetGridModel = function() {
     // Iterate through all grid cells and set click state to false
     for (var cell in this.gridModel) {
@@ -90,11 +96,13 @@ graphicEditor.resetGridModel = function() {
     };
 };
 
-// Function Name: updateGridModel
-// Description: updates cell object properties
-graphicEditor.updateGridModel = function(update) {
-    var cellID = update.cellID;
-    var clickState = update.clickState;
+/**
+ * Updates cell object properties.
+ * @param {Object} updatedCell object containing the details of cell which needs to be updated
+ */
+graphicEditor.updateGridModel = function(updatedCell) {
+    var cellID = updatedCell.cellID;
+    var clickState = updatedCell.clickState;
     var updateGrid = false;
     
     for (var cell in this.gridModel) {
@@ -109,17 +117,15 @@ graphicEditor.updateGridModel = function(update) {
         graphicEditor.updateGridView();
     };
 };
-// ///////////////////////////////////////////////////////////////////////////////////////
 
-
-// Event handling functions
-
-// Function Name: gridEventListener
-// Description: Initiate each of the event listener functions
+// Event handling functions //////////////////////////////////////////////////////////////
+/**
+ * Initiates a number of functions used for event listing. 
+ */
 graphicEditor.gridEventListener = function() {
     this.selectCell();
     this.mouseoverCell();  
-    this.unselectCell();    
+    this.mouseoutCell();    
     this.fillColourChange();
     this.fillOpacityChange();
     this.strokeColourChange();
@@ -127,8 +133,10 @@ graphicEditor.gridEventListener = function() {
     this.symbolSizeChange();
 };
 
-// Function Name: selectCell
-// Description: Performs required tasks when a cell is selected. 
+/**
+ * Determines what cell is being clicked and reports its state 
+ * as being clicked.
+ */
 graphicEditor.selectCell = function() {
     $('.gridcell').click( function() { 
         var cellID = $(this).attr('id');
@@ -150,17 +158,21 @@ graphicEditor.selectCell = function() {
     });
 };
 
-// Function Name: unselectCell
-// Description: Performs required tasks when a cell is unselected
-graphicEditor.unselectCell = function() {
+/**
+ * toggles the css mouseovergridcell class when a user
+ * moves their mouse off a grid cell.
+ */
+graphicEditor.mouseoutCell = function() {
     $('.gridcell').mouseout( function() {    
         var cellID = $(this).attr('id');       
         $(this).toggleClass('mouseovergridcell');        
     });  
 };
 
-// Function Name: mouseoverCell
-// Description: Performs required tasks when a cell is mouseover
+/**
+ * toggles the css mouseovergridcell class when a user
+ * moves their mouse over a grid cell.
+ */
 graphicEditor.mouseoverCell = function() {
     $('.gridcell').mouseover( function() {    
         var cellID = $(this).attr('id');      
@@ -168,8 +180,10 @@ graphicEditor.mouseoverCell = function() {
     });
 };
 
-// Function Name: fillColourChange
-// Description: Update the fill colour of the map style
+/**
+ * Update the fill colour of the default map style 
+ * when the fill colour selector is changed.
+ */
 graphicEditor.fillColourChange = function() {
     $('#fillColourSelector').change(function() {
         graphicEditor.defaultStyle.defaultStyle.fillColor = $('#fillColourSelector').val();
@@ -177,8 +191,10 @@ graphicEditor.fillColourChange = function() {
     });
 };
 
-//Function Name: fillOpacityChange
-//Description: Update the fill opacity
+/**
+ * Update the fill opacity of the default map style 
+ * when the fill opacity selector is changed.
+ */
 graphicEditor.fillOpacityChange = function() {
  $('#fillOpacitySelector').change(function() {
      graphicEditor.defaultStyle.defaultStyle.fillOpacity = $('#fillOpacitySelector').val();
@@ -186,8 +202,10 @@ graphicEditor.fillOpacityChange = function() {
  });
 };
 
-// Function Name: strokeColourChange
-// Description: Update the stroke colour of the map style
+/**
+ * Update the stroke colour of the default map style 
+ * when the stroke colour selector is changed.
+ */
 graphicEditor.strokeColourChange = function() {
     $('#strokeColourSelector').change(function() {
         graphicEditor.defaultStyle.defaultStyle.strokeColor = $('#strokeColourSelector').val();
@@ -195,8 +213,10 @@ graphicEditor.strokeColourChange = function() {
     });
 };
 
-//Function Name: strokeOpacityChange
-//Description: Update the stroke opacity
+/**
+ * Update the stroke opacity of the default map style when the 
+ * stroke opacity selector is changed.
+ */
 graphicEditor.strokeOpacityChange = function() {
  $('#strokeOpacitySelector').change(function() {
      graphicEditor.defaultStyle.defaultStyle.strokeOpacity = $('#strokeOpacitySelector').val();
@@ -204,20 +224,27 @@ graphicEditor.strokeOpacityChange = function() {
  });
 };
 
-// Function Name: symbolSizeChange
-// Description: Update the symbol size
+/**
+ * Update the point radius of the default map style when the 
+ * point radius selector is changed.
+ */
 graphicEditor.symbolSizeChange = function() {
     $('#pointRadiusSelector').change(function() {
         graphicEditor.defaultStyle.defaultStyle.pointRadius = $('#pointRadiusSelector').val();
         graphicEditor.previewGraphic();
     });
 };
-// ///////////////////////////////////////////////////////////////////////////////////////
 
-
-
-// Function Name: calcSlope
-// Description: calculates slope between two sets of points
+// Geometry functions ////////////////////////////////////////////////////////////////////
+/**
+ * Calculates the slope of a straight line
+ * using the equation slope = delta y/delta x
+ * @param {number} x1 the first x value
+ * @param {number} y1 the first y value
+ * @param {number} x2 the second x value
+ * @param {number} y2 the second y value
+ * @return {number} the slope of line
+ */
 graphicEditor.calcSlope = function(x1,y1,x2,y2) {
     var rise = y2-y1;
     var run = x2-x1;
@@ -225,29 +252,49 @@ graphicEditor.calcSlope = function(x1,y1,x2,y2) {
     return slope;
 };
 
-//Function Name: calcIntercept
-//Description: calculates y intercept
+/**
+ * Calculates the y intercept
+ * using the equation b = y - (m * x)
+ * @param {number} x the x value
+ * @param {number} y the y value
+ * @param {number} m the slope
+ * @return {number} the value of the y intercept
+ */
 graphicEditor.calcIntercept = function(x,y,m) {
     var b = y - (m*x);
     return b;
 };
 
-//Function Name: calcY
-//Description: calculates y value
+/**
+ * Calculates the y value for a linear equation
+ * using the equation y = (m*x)+b
+ * @param {number} x the x value
+ * @param {number} m the slope
+ * @param {number} b the y intercept
+ * @return {number} the value of y
+ */
 graphicEditor.calcY = function(x,m,b) {
     var y = Math.round((m*x)+b);
     return y;
 };
 
-//Function Name: calcY
-//Description: calculates x value
+/**
+ * Calculates the x value for a linear equation
+ * using the equation x = (y - b)/m
+ * @param {number} y the y value
+ * @param {number} m the slope
+ * @param {number} b the y intercept
+ * @return {number} the value of x
+ */
 graphicEditor.calcX = function(y,m,b) {
     var x = Math.round((y-b)/m);  
     return x;
 };
 
-// Function Name: connectPoints
-// Description: determines which grid cells between two points need to be set to clickState to true
+/**
+ * Calculates which cells need to set as being clicked, 
+ * in order to connect to points together on a grid
+ */
 graphicEditor.connectPoints = function() {
     eval("var clickSummary =" + $('#clickSummary').val());
     
@@ -345,13 +392,13 @@ graphicEditor.connectPoints = function() {
         };
     };    
 };
-// ///////////////////////////////////////////////////////////////////////////////////////
 
+// Control interface functions ///////////////////////////////////////////////////////////
 
-// Control interface functions
-
-// Function Name: updateClickSummary
-// Description: update the click summary string
+/**
+ * Update the click summary string to include the newly clicked coordinate values
+ * @param {array} coords the coordinate pair for clicked cell
+ */
 graphicEditor.updateClickSummary = function(coords) {
     var newCoordsPair = coords[0] + "," + coords[1];
     if (this.userClickSummary === "") {
@@ -361,14 +408,16 @@ graphicEditor.updateClickSummary = function(coords) {
     };
 };
 
-// Function Name: updateTextarea
-// Description: updates value of the input form textarea element
+/**
+ * Updates value of the input form textarea element
+ */
 graphicEditor.updateTextarea = function() {
     $('#clickSummary').val("[" + this.userClickSummary + "]");
 };
 
-// Function Name: reset
-// Description: calls functions to reset the model and view for the user
+/**
+ * Resets both the model and view for the user
+ */
 graphicEditor.reset = function() {
     // Reset grid model
     graphicEditor.resetGridModel();
@@ -403,12 +452,12 @@ graphicEditor.reset = function() {
     this.defaultStyle.defaultStyle.pointRadius = 12;
     $('#pointRadiusSelector').val(12);
 };
-// ///////////////////////////////////////////////////////////////////////////////////////
 
-// Preview map functions
+// Preview map functions /////////////////////////////////////////////////////////////////
 
-//Function Name: initDefaultStyle
-//Description: initiate the default style of a symbol
+/**
+ * Initiate the default style of a symbol
+ */
 graphicEditor.initDefaultStyle = function() {
  this.defaultStyle = new OpenLayers.Style({
      graphicName: "previewSymbol",
@@ -420,8 +469,9 @@ graphicEditor.initDefaultStyle = function() {
  });    
 };
 
-// Function Name: initPreviewMap
-// Description: Initiates the preview map
+/**
+ * Initiates the OpenLayers 2 preview map
+ */
 graphicEditor.initPreviewMap = function() {
     this.map = new OpenLayers.Map('map');
     this.mercator = new OpenLayers.Projection("EPSG:900913"); 
@@ -443,14 +493,9 @@ graphicEditor.initPreviewMap = function() {
     });
 };
 
-// Function Name: updatePreviewSymbol
-// Description: update the preview symbol 
-graphicEditor.updatePreviewSymbol = function() {
-    eval('OpenLayers.Renderer.symbol.previewSymbol =' + $('#clickSummary').val());
-};
-
-// Function Name: previewGraphic
-// Description: show preview graphic point
+/**
+ * Preview symbol appearance based on the contents of the click summary
+ */
 graphicEditor.previewGraphic = function() {
     
     if ($('#clickSummary').val() != '[]') {
@@ -463,7 +508,8 @@ graphicEditor.previewGraphic = function() {
         this.map.addLayer(this.pointLayer);
         
         //update Graphic symbol
-        this.updatePreviewSymbol();
+        eval('OpenLayers.Renderer.symbol.previewSymbol =' + $('#clickSummary').val());
+        //this.updatePreviewSymbol();
         
         // create and add point to tempPointLayer
         this.point = new OpenLayers.Geometry.Point(-75.69953, 45.38076);
@@ -473,18 +519,19 @@ graphicEditor.previewGraphic = function() {
     };
 };
 
-// Function Name: removePreviewGraphic
-// Description: removes the preview graphic symbol from the map
+/**
+ * Removes the preview graphic symbol from the map
+ */
 graphicEditor.removePreviewGraphic = function() {
     if (this.pointFeature != null) {
         this.pointLayer.destroyFeatures([this.pointFeature]);
     };
 }
-// ///////////////////////////////////////////////////////////////////////////////////////
 
-
-// Function name: start
-// Description: calls required functions to start graphic editor. 
+// Start graphic editor //////////////////////////////////////////////////////////////////
+/**
+ * Calls required functions to start graphic editor. 
+ */
 graphicEditor.start = function() {
     // Create div grid  
     this.generateGrid();
@@ -502,5 +549,4 @@ graphicEditor.start = function() {
     this.updateTextarea();
 };
 
-// Start editor
 graphicEditor.start();
