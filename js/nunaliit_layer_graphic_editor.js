@@ -7,8 +7,8 @@ var overlayGraphicEditor = overlayGraphicEditor || (function () {
     "use strict";
     var editorProperties = {
         gridModel: [],
-        numColumns: 11,
-        numRows: 11,
+        numColumns: 15,
+        numRows: 15,
         userClickSummary: "",
         map: null,
         mercator: null,
@@ -96,6 +96,7 @@ var overlayGraphicEditor = overlayGraphicEditor || (function () {
             }
         }
     };
+
     // Grid Model functions //////////////////////////////////////////////////////////////////
     /**
      * Initiate grid model with unselected cell values
@@ -269,7 +270,7 @@ var overlayGraphicEditor = overlayGraphicEditor || (function () {
     /**
      * Calculates the x value for a linear equation
      * using the equation x = (y - b)/m
-     * @param {number} y the y value
+     * @param {number} y the y valuey
      * @param {number} m the slope
      * @param {number} b the y intercept
      * @return {number} the value of x
@@ -284,7 +285,7 @@ var overlayGraphicEditor = overlayGraphicEditor || (function () {
      * in order to connect to points together on a grid
      */
     var _connectPoints = function () {
-        var i, x1, y1, x2, y2, m, b, clickSummary, currentCell, update, highX, lowX, highY, lowY, y, x;
+        var i, x1, y1, x2, y2, m, b, clickSummary, update, highX, lowX, highY, lowY, y, x;
         eval("clickSummary =" + $('#clickSummary').val());
         if (clickSummary.length >= 4) {
             x1 = clickSummary[clickSummary.length - 4];
@@ -293,44 +294,32 @@ var overlayGraphicEditor = overlayGraphicEditor || (function () {
             y2 = clickSummary[clickSummary.length - 1];
             m = _calcSlope(x1, y1, x2, y2);
             b = _calcIntercept(x1, y1, m);
+            update = {
+                cellID: "",
+                clickState: true
+            };
             // update grid model to connect between points
             if (x1 === x2) {
                 if (y1 < y2) {
                     for (i = y1; i < y2; i += 1) {
-                        currentCell = x1 + "_" + i;
-                        update = {
-                            cellID: currentCell,
-                            clickState: true
-                        };
+                        update.cellID = x1 + "_" + i;
                         _updateGridModel(update);
                     }
                 } else {
                     for (i = y2; i < y1; i += 1) {
-                        currentCell = x1 + "_" + i;
-                        update = {
-                            cellID: currentCell,
-                            clickState: true
-                        };
+                        update.cellID = x1 + "_" + i;
                         _updateGridModel(update);
                     }
                 }
             } else if (y1 === y2) {
                 if (x1 < x2) {
                     for (i = x1; i < x2; i += 1) {
-                        currentCell = i + "_" + y1;
-                        update = {
-                            cellID: currentCell,
-                            clickState: true
-                        };
+                    	update.cellID = i + "_" + y1;
                         _updateGridModel(update);
                     }
                 } else {
                     for (i = x2; i < x1; i += 1) {
-                        currentCell = i + "_" + y1;
-                        update = {
-                            cellID: currentCell,
-                            clickState: true
-                        };
+                    	update.cellID = i + "_" + y1;
                         _updateGridModel(update);
                     }
                 }
@@ -345,11 +334,7 @@ var overlayGraphicEditor = overlayGraphicEditor || (function () {
                     }
                     for (i = lowX + 1; i < highX; i += 1) {
                         y = _calcY(i, m, b);
-                        currentCell = i + "_" + y;
-                        update = {
-                            cellID: currentCell,
-                            clickState: true
-                        };
+                        update.cellID = i + "_" + y;
                         _updateGridModel(update);
                     }
                 } else {
@@ -362,11 +347,7 @@ var overlayGraphicEditor = overlayGraphicEditor || (function () {
                     }
                     for (i = lowY + 1; i < highY; i += 1) {
                         x = _calcX(i, m, b);
-                        currentCell = x + "_" + i;
-                        update = {
-                            cellID: currentCell,
-                            clickState: true
-                        };
+                        update.cellID = x + "_" + i;
                         _updateGridModel(update);
                     }
                 }
